@@ -95,7 +95,7 @@
 		<a href="/about" title="Liang Hui" target="_blank" itemprop="author">Liang Hui</a>
 		
   <p class="article-time">
-    <time datetime="2020-04-16T08:26:01.854Z" itemprop="datePublished"> Published 2020-04-16</time>
+    <time datetime="2020-04-16T08:40:32.394Z" itemprop="datePublished"> Published 2020-04-16</time>
     
   </p>
 </header>
@@ -119,11 +119,11 @@
 <br>
 <br>**代码：创建celery实例，定义异步执行的函数**
 <br>task.py文件，创建celery实例，导入celery配置文件，配置了broker和backend的url、密码等信息。
-![](https://i.imgur.com/V08nXSq.png)
+<br>![](https://i.imgur.com/V08nXSq.png)
 <br>
 <br>**代码：调用异步执行的函数**
 <br>run.py文件，在业务流程中调用异步函数，通过delay()的方式调用。delay()是apply_async()的快捷方法，可以很好的控制任务的执行。
-![](https://i.imgur.com/xrgQngR.png)
+<br>![](https://i.imgur.com/xrgQngR.png)
 <br>调用函数时支持传入函数的参数。执行delay()方法立即返回任务的id，后续可以通过该任务id获取运行的状态和结果。
 <br>
 <br>**代码：获取异步函数的状态和结果**
@@ -136,12 +136,7 @@
   celery worker -A disk.tasks -l info -P eventlet
 <br>-A指定异步任务定义的文件，-l表示日志报告的级别，-P指定异步框架使用eventlet。
 </li>
-<li><p>###多任务处理<br>以上是一个简单的单个任务处理。一个应用或程序往往不止一个异步任务，多任务处理是必须考虑的一种情景。多个任务可以放在同一个文件也可以放在不同文件，根据实际需要操作。<br><br>回看原理图，如果有多个不同类型的任务，但只放在一个消息队列或只调用一个worker，其中一个任务占用worker执行，其他的任务就需要排队等待，而celery是支持同时运行多个消息队列多个worker，不同类型的任务放在不同worker里面，相互不阻塞影响。消息队列和任务通过交换机Exchange函数和routing_key来匹配。</p>
-<br>
-![](https://i.imgur.com/TN3fu8C.png)
-<br>以上是一个celery队列配置的例子。一共3个队列：default、task_fio、task_net，下面是3个异步函数的路由，表示startfio函数路由到task_fio队列执行，startspeed和startiperf则均路由到task_net队列执行。在两个命令行窗口分别运行以下命令，启动2个worker，分别处理task_fio和task_net队列的任务。
-<br>    celery worker -A disk.tasks -Q task_fio -l info -P eventlet 
-<br>    celery worker -A disk.tasks -Q task_net -l info -P eventlet
+<li><p>###多任务处理<br>以上是一个简单的单个任务处理。一个应用或程序往往不止一个异步任务，多任务处理是必须考虑的一种情景。多个任务可以放在同一个文件也可以放在不同文件，根据实际需要操作。<br><br>回看原理图，如果有多个不同类型的任务，但只放在一个消息队列或只调用一个worker，其中一个任务占用worker执行，其他的任务就需要排队等待，而celery是支持同时运行多个消息队列多个worker，不同类型的任务放在不同worker里面，相互不阻塞影响。消息队列和任务通过交换机Exchange函数和routing_key来匹配。<br><br><img src="https://i.imgur.com/TN3fu8C.png" alt=""><br><br>以上是一个celery队列配置的例子。一共3个队列：default、task_fio、task_net，下面是3个异步函数的路由，表示startfio函数路由到task_fio队列执行，startspeed和startiperf则均路由到task_net队列执行。在两个命令行窗口分别运行以下命令，启动2个worker，分别处理task_fio和task_net队列的任务。<br><br>    celery worker -A disk.tasks -Q task_fio -l info -P eventlet<br><br>    celery worker -A disk.tasks -Q task_net -l info -P eventlet</p>
 </li>
 <li><p>###定时任务<br>定时的方式有两种，一是每隔固定时间执行（通过datetime的timedelta函数实现），二是使用crontab指定时间（使用celery的crontab函数）。调用定时任务也有两种类型，分别是在配置文件直接配置，写死任务的参数，以及使用数据库存储定时任务，灵活调整任务参数。这里只测试了在配置文件中配置的方式。<br><br><img src="https://i.imgur.com/K3IQtCA.png" alt=""><br><br>截图在CELERYBEAT_SCHEDULE中定义两个定时任务，分别是每隔40s执行一次startspeed函数，和每周一早上8点30分执行startfio函数。<br><br>配置好任务后，celery需另开一个进程执行定时任务。不管多少个定时任务，调用一次celery beat进程即可。<br><br>    celery -A disk.tasks beat</p>
 </li>
