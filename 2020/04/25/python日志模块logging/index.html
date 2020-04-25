@@ -11,29 +11,21 @@
     
 
     
-    <meta name="description" content="需求为了方便管理和监控程序或应用的运行状况，及在出现故障时快速找到问题根源，日志记录是必不可少的一部分。日志记录的信息是否完整、清晰，很大程度上会影响排查故障的效率。如何有效记录日志是一个需要注意的问题，在python这门语言里面的日志模块logging则能给到我们一个灵活、强大的处理方式。 logging简单使用在flask框架中使用logging模块的最简单方式，如下：直接导入logging模">
+    <meta name="description" content="需求为了方便管理和监控程序或应用的运行状况，及在出现故障时快速找到问题根源，日志记录是必不可少的一部分。日志记录的信息是否完整、清晰，很大程度上会影响排查故障的效率。如何有效记录日志是一个需要注意的问题，在python这门语言里面的日志模块logging则能给到我们一个灵活、强大的处理方式。  #### logging简单使用 在flask框架中使用logging模块的最简单方式，如下： ![](">
 <meta property="og:type" content="article">
 <meta property="og:title" content="python日志模块logging">
 <meta property="og:url" content="http://yoursite.com/2020/04/25/python%E6%97%A5%E5%BF%97%E6%A8%A1%E5%9D%97logging/index.html">
 <meta property="og:site_name" content="seizetheday博客">
-<meta property="og:description" content="需求为了方便管理和监控程序或应用的运行状况，及在出现故障时快速找到问题根源，日志记录是必不可少的一部分。日志记录的信息是否完整、清晰，很大程度上会影响排查故障的效率。如何有效记录日志是一个需要注意的问题，在python这门语言里面的日志模块logging则能给到我们一个灵活、强大的处理方式。 logging简单使用在flask框架中使用logging模块的最简单方式，如下：直接导入logging模">
+<meta property="og:description" content="需求为了方便管理和监控程序或应用的运行状况，及在出现故障时快速找到问题根源，日志记录是必不可少的一部分。日志记录的信息是否完整、清晰，很大程度上会影响排查故障的效率。如何有效记录日志是一个需要注意的问题，在python这门语言里面的日志模块logging则能给到我们一个灵活、强大的处理方式。  #### logging简单使用 在flask框架中使用logging模块的最简单方式，如下： ![](">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://yoursite.com/img/articleimg/log.jpg">
-<meta property="og:image" content="http://yoursite.com/img/articleimg/basic.jpg">
-<meta property="og:image" content="http://yoursite.com/img/articleimg/defaultlog.jpg">
-<meta property="og:image" content="http://yoursite.com/img/articleimg/selflog.jpg">
-<meta property="og:image" content="http://yoursite.com/img/articleimg/logger3.jpg">
-<meta property="og:image" content="https://docs.python.org/3/_images/logging_flow.png">
-<meta property="og:image" content="http://yoursite.com/img/articleimg/loglevel.jpg">
-<meta property="og:image" content="http://yoursite.com/img/articleimg/dictconfig.jpg">
 <meta property="og:image" content="http://yoursite.com/img/articleimg/yamlsample.jpg">
 <meta property="article:published_time" content="2020-04-25T14:00:15.000Z">
-<meta property="article:modified_time" content="2020-04-25T14:38:40.006Z">
+<meta property="article:modified_time" content="2020-04-25T14:41:45.022Z">
 <meta property="article:author" content="Liang Hui">
 <meta property="article:tag" content="python">
 <meta property="article:tag" content="日志logging">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/img/articleimg/log.jpg">
+<meta name="twitter:image" content="http://yoursite.com/img/articleimg/yamlsample.jpg">
 
     
     <link rel="alternative" href="/atom.xml" title="seizetheday博客" type="application/atom+xml">
@@ -116,15 +108,47 @@
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#需求"><span class="toc-number">1.</span> <span class="toc-text">需求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#logging简单使用"><span class="toc-number">2.</span> <span class="toc-text">logging简单使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#logging模块知识点"><span class="toc-number">3.</span> <span class="toc-text">logging模块知识点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置logger，handler，formatter"><span class="toc-number">4.</span> <span class="toc-text">配置logger，handler，formatter</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#自定义handler"><span class="toc-number">5.</span> <span class="toc-text">自定义handler</span></a></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#需求"><span class="toc-number">1.</span> <span class="toc-text">需求</span></a></li></ol>
 		
 		</div>
 		
 		<h4 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h4><p>为了方便管理和监控程序或应用的运行状况，及在出现故障时快速找到问题根源，日志记录是必不可少的一部分。日志记录的信息是否完整、清晰，很大程度上会影响排查故障的效率。如何有效记录日志是一个需要注意的问题，在python这门语言里面的日志模块logging则能给到我们一个灵活、强大的处理方式。</p>
-<h4 id="logging简单使用"><a href="#logging简单使用" class="headerlink" title="logging简单使用"></a>logging简单使用</h4><p>在flask框架中使用logging模块的最简单方式，如下：<br><br><img src="/img/articleimg/log.jpg" alt=""><br><br>直接导入logging模块就应用于产生日志，而logging本身是可以配置日志的存储文件、记录级别等信息，这里不做配置，即使用了默认的配置信息，只输出日志到控制台，日志级别为warning。如果把日志记录到文件中，并修改日志级别为debug，可调用logging.basicConfig进行更改：<br><img src="/img/articleimg/basic.jpg" alt=""><br><br>如此则日志记录在ab.log当中，而不会出现在控制台。<br><br>logging.basicConfig中可配置的信息还包括filemode、format等，filemode=’w’时，会清空filename中文件的信息，重新写入日志；format可定义日志输出的格式，logging支持多种参数显示不同信息，以下示例是默认格式和自定义格式(fornat=’%(asctime)s %(levelname)s %(message)s’)的区别:<br><img src="/img/articleimg/defaultlog.jpg" alt=""> <img src="/img/articleimg/selflog.jpg" alt=""></p>
-<h4 id="logging模块知识点"><a href="#logging模块知识点" class="headerlink" title="logging模块知识点"></a>logging模块知识点</h4><p>以上<strong>基本能满足大部分日志记录的需求</strong>，然实际应用中仍有一些需求需要更灵活的配置，诸如部分日志只记录在控制台、部分日志记录在文件或不同文件等，实现这样强大的配置得了解几个概念，logger、handler和formatter。<br><br><strong>logger</strong> ：决定日志消息按哪个handler配置进行记录，暴露的一些常用配置的方法如下图。<br><br><strong>handler</strong> ：定义日志记录的级别、使用的格式器和过滤器，及发送到哪个地方（控制台或文件）等。<br><br><strong>formatter</strong> ：日志输出的具体格式。常见属性如下，更多请自行搜索。<br><img src="/img/articleimg/logger3.jpg" alt=""><br><br>下图是logger和hanlder内部工作的流程，可先看看，或者看下一小节实践后再回来巩固下逻辑。<br><img src="https://docs.python.org/3/_images/logging_flow.png" alt=""><br><br><br><br><strong>日志级别</strong>是另一个知识点，数值越高，严重级别越高。设置了某个日志级别后，只会记录严重级别高于或等于该级别的日志信息。<br><br><img src="/img/articleimg/loglevel.jpg" alt=""></p>
-<h4 id="配置logger，handler，formatter"><a href="#配置logger，handler，formatter" class="headerlink" title="配置logger，handler，formatter"></a>配置logger，handler，formatter</h4><p>接下来看个例子，通过从logging.config中导入dictConfig，配置字典来实现自定义logger、handler和formatter。<br><img src="/img/articleimg/dictconfig.jpg" alt=""><br><br>上图的dictConfig中有三个键，分别是formatters、handlers和loggers，这些键对应的值也是字典形式，如hanlders下定义了两个不同的handler：stream和file，stream记录的日志级别是warning，输出到控制台，file记录的日志级别是INFO，输出到ab.log文件，均使用命名为default的formatter。dictConfig只定义了一个logger，就是thelogger，它同时应用stream和file两个handler记录文件，即日志会同时记录到控制台和ab.log文件中。<br><br><br><br>细心的朋友会发现在<strong>handler和logger中均存在level</strong>这个属性，它们之间的关系是怎样的呢？logger中的level决定了传递到handler的日志级别，而handler的level表示最终打印出来的日志级别。例子中执行main视图函数时，在控制台只会记录warning的信息，而在ab.log中会记录到info和warning两条信息。如果把thelogger的level设置为WARNING，控制台和文件分别会如何输出日志呢？显然是只有控制台会输出wanning的日志。<br><br><br><br>例子中配置logging是在dictConfig字典中写入了loggers，handlers和formatters，也可以通过把配置信息另外写在单独的文件中，以<strong>ini格式、yaml格式或JSON格式</strong>，再进行文件读取，加载到logging.config配置模块中。yaml格式可阅读性非常高，熟悉的话建议把配置信息写在yaml文件中，通过如下方式加载：<br><br><img src="/img/articleimg/yamlsample.jpg" alt=""></p>
-<h4 id="自定义handler"><a href="#自定义handler" class="headerlink" title="自定义handler"></a>自定义handler</h4><p>logging本身提供了很多可用的handler子类，如StramHandler、FileHandler、seRotatingHandler、TimedRotatingFileHandler、SMTPHandler和QueueHandler等，去适应各种场景下的日志记录，而根据这些handler去创造更多符合项目需求的handler是个有意思的挑战，像把日志写进数据库这类的。<br><br>这里暂时不做更深的研究，之后有时间再把这块补上。</p>
+<br>
+#### logging简单使用
+在flask框架中使用logging模块的最简单方式，如下：
+![](/img/articleimg/log.jpg)
+<br>直接导入logging模块就应用于产生日志，而logging本身是可以配置日志的存储文件、记录级别等信息，这里不做配置，即使用了默认的配置信息，只输出日志到控制台，日志级别为warning。如果把日志记录到文件中，并修改日志级别为debug，可调用logging.basicConfig进行更改：
+![](/img/articleimg/basic.jpg)
+<br>如此则日志记录在ab.log当中，而不会出现在控制台。
+<br>logging.basicConfig中可配置的信息还包括filemode、format等，filemode='w'时，会清空filename中文件的信息，重新写入日志；format可定义日志输出的格式，logging支持多种参数显示不同信息，以下示例是默认格式和自定义格式(fornat='%(asctime)s %(levelname)s %(message)s')的区别:
+![](/img/articleimg/defaultlog.jpg) ![](/img/articleimg/selflog.jpg)
+
+<br>
+#### logging模块知识点
+以上**基本能满足大部分日志记录的需求**，然实际应用中仍有一些需求需要更灵活的配置，诸如部分日志只记录在控制台、部分日志记录在文件或不同文件等，实现这样强大的配置得了解几个概念，logger、handler和formatter。
+<br>**logger** ：决定日志消息按哪个handler配置进行记录，暴露的一些常用配置的方法如下图。
+<br>**handler** ：定义日志记录的级别、使用的格式器和过滤器，及发送到哪个地方（控制台或文件）等。
+<br>**formatter** ：日志输出的具体格式。常见属性如下，更多请自行搜索。
+![](/img/articleimg/logger3.jpg)
+<br>下图是logger和hanlder内部工作的流程，可先看看，或者看下一小节实践后再回来巩固下逻辑。
+![](https://docs.python.org/3/_images/logging_flow.png)
+<br>
+<br>**日志级别**是另一个知识点，数值越高，严重级别越高。设置了某个日志级别后，只会记录严重级别高于或等于该级别的日志信息。
+![](/img/articleimg/loglevel.jpg)
+
+<br>
+#### 配置logger，handler，formatter
+接下来看个例子，通过从logging.config中导入dictConfig，配置字典来实现自定义logger、handler和formatter。
+![](/img/articleimg/dictconfig.jpg)
+<br>上图的dictConfig中有三个键，分别是formatters、handlers和loggers，这些键对应的值也是字典形式，如hanlders下定义了两个不同的handler：stream和file，stream记录的日志级别是warning，输出到控制台，file记录的日志级别是INFO，输出到ab.log文件，均使用命名为default的formatter。dictConfig只定义了一个logger，就是thelogger，它同时应用stream和file两个handler记录文件，即日志会同时记录到控制台和ab.log文件中。
+
+<p><br>细心的朋友会发现在<strong>handler和logger中均存在level</strong>这个属性，它们之间的关系是怎样的呢？logger中的level决定了传递到handler的日志级别，而handler的level表示最终打印出来的日志级别。例子中执行main视图函数时，在控制台只会记录warning的信息，而在ab.log中会记录到info和warning两条信息。如果把thelogger的level设置为WARNING，控制台和文件分别会如何输出日志呢？显然是只有控制台会输出wanning的日志。</p>
+<p><br>例子中配置logging是在dictConfig字典中写入了loggers，handlers和formatters，也可以通过把配置信息另外写在单独的文件中，以<strong>ini格式、yaml格式或JSON格式</strong>，再进行文件读取，加载到logging.config配置模块中。yaml格式可阅读性非常高，熟悉的话建议把配置信息写在yaml文件中，通过如下方式加载：<br><br><img src="/img/articleimg/yamlsample.jpg" alt=""></p>
+<br>
+#### 自定义handler
+logging本身提供了很多可用的handler子类，如StramHandler、FileHandler、seRotatingHandler、TimedRotatingFileHandler、SMTPHandler和QueueHandler等，去适应各种场景下的日志记录，而根据这些handler去创造更多符合项目需求的handler是个有意思的挑战，像把日志写进数据库这类的。
+<br>这里暂时不做更深的研究，之后有时间再把这块补上。
+
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -181,7 +205,7 @@
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#需求"><span class="toc-number">1.</span> <span class="toc-text">需求</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#logging简单使用"><span class="toc-number">2.</span> <span class="toc-text">logging简单使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#logging模块知识点"><span class="toc-number">3.</span> <span class="toc-text">logging模块知识点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置logger，handler，formatter"><span class="toc-number">4.</span> <span class="toc-text">配置logger，handler，formatter</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#自定义handler"><span class="toc-number">5.</span> <span class="toc-text">自定义handler</span></a></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#需求"><span class="toc-number">1.</span> <span class="toc-text">需求</span></a></li></ol>
  
   </div>
 
