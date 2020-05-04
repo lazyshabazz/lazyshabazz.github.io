@@ -1,0 +1,499 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>flask框架中数据库操作的方式.md | seizetheday博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Liang Hui">
+    
+
+    
+    <meta name="description" content="flask操作数据库的两种主要方式python操作数据库有两种方式，一种是通过安装连接库，传入原生SQL语句操作数据库，第二种是通过ORM框架去操作数据库，即把类对象转换成SQL语句，然后使用数据API执行SQL语句并获取执行结果。两种方式自然各有优劣，熟悉SQL语句编写的用原生SQL更有可能获得高性能，而ORM框架提供了简单的使用方式，可以避免很多编写原生SQL遇到的语法问题等，专注于实现业务的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="flask框架中数据库操作的方式.md">
+<meta property="og:url" content="http://yoursite.com/2020/05/04/flask%E6%A1%86%E6%9E%B6%E4%B8%AD%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C%E7%9A%84%E6%96%B9%E5%BC%8F/index.html">
+<meta property="og:site_name" content="seizetheday博客">
+<meta property="og:description" content="flask操作数据库的两种主要方式python操作数据库有两种方式，一种是通过安装连接库，传入原生SQL语句操作数据库，第二种是通过ORM框架去操作数据库，即把类对象转换成SQL语句，然后使用数据API执行SQL语句并获取执行结果。两种方式自然各有优劣，熟悉SQL语句编写的用原生SQL更有可能获得高性能，而ORM框架提供了简单的使用方式，可以避免很多编写原生SQL遇到的语法问题等，专注于实现业务的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://files.jb51.net/file_images/article/201807/2018713121936591.png?201861312209">
+<meta property="article:published_time" content="2020-05-04T08:50:53.000Z">
+<meta property="article:modified_time" content="2020-05-04T08:54:49.034Z">
+<meta property="article:author" content="Liang Hui">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="数据库">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://files.jb51.net/file_images/article/201807/2018713121936591.png?201861312209">
+
+    
+    <link rel="alternative" href="/atom.xml" title="seizetheday博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="seizetheday博客" title="seizetheday博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="seizetheday博客">seizetheday博客</a></h1>
+				<h2 class="blog-motto">学习，工作，生活</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+						<li><a href="/tags">标签</a></li>
+					
+						<li><a href="/categories">目录</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2020/05/04/flask框架中数据库操作的方式/" title="flask框架中数据库操作的方式.md" itemprop="url">flask框架中数据库操作的方式.md</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Liang Hui" target="_blank" itemprop="author">Liang Hui</a>
+		
+  <p class="article-time">
+    <time datetime="2020-05-04T08:50:53.000Z" itemprop="datePublished"> 发表于 2020-05-04</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#flask操作数据库的两种主要方式"><span class="toc-number">1.</span> <span class="toc-text">flask操作数据库的两种主要方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pymysql使用"><span class="toc-number">2.</span> <span class="toc-text">pymysql使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ORM介绍"><span class="toc-number">3.</span> <span class="toc-text">ORM介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#flask-sqlalchemy使用"><span class="toc-number">4.</span> <span class="toc-text">flask_sqlalchemy使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#最后"><span class="toc-number">5.</span> <span class="toc-text">最后</span></a></li></ol>
+		
+		</div>
+		
+		<h4 id="flask操作数据库的两种主要方式"><a href="#flask操作数据库的两种主要方式" class="headerlink" title="flask操作数据库的两种主要方式"></a>flask操作数据库的两种主要方式</h4><p>python操作数据库有两种方式，一种是通过安装连接库，传入原生SQL语句操作数据库，第二种是通过ORM框架去操作数据库，即把类对象转换成SQL语句，然后使用数据API执行SQL语句并获取执行结果。<br><br><br>两种方式自然各有优劣，熟悉SQL语句编写的用原生SQL更有可能获得高性能，而ORM框架提供了简单的使用方式，可以避免很多编写原生SQL遇到的语法问题等，专注于实现业务的逻辑，ORM的应用相对更广泛一点，毕竟上手容易，尽管会牺牲一些性能作为代价。<br><br><br>下面分别介绍下这两种方式在flask开发中的实际应用。支持原生SQL的库包括pymysql、flask-mysql和MySQLdb等，pymysql现在用的更多；flask框架中有flask_sqlalchemy这样专为flask开发的ORM库，非常灵活。</p>
+<h4 id="pymysql使用"><a href="#pymysql使用" class="headerlink" title="pymysql使用"></a>pymysql使用</h4><p>首先安装pymysql库。<br><code>pip install PyMySQL</code><br><br><br>简单应用：pymysql的connect()方法与数据库进行连接，获取数据库游标cursor，通过cursor对数据库进行各种操作，包括创建表、查询数据、插入数据、修改数据等。execute()执行的sql语句即为原生语句，执行增删改操作后，需要执行commit()提交到数据库。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pymysql</span><br><span class="line"> </span><br><span class="line"># 打开数据库连接</span><br><span class="line">db = pymysql.<span class="built_in">connect</span>(<span class="string">"localhost"</span>,<span class="string">"user"</span>,<span class="string">"123"</span>,<span class="string">"TESTDB"</span> )</span><br><span class="line"> </span><br><span class="line"># 使用 <span class="built_in">cursor</span>() 方法创建一个游标对象 <span class="built_in">cursor</span></span><br><span class="line"><span class="built_in">cursor</span> = db.<span class="built_in">cursor</span>()</span><br><span class="line"></span><br><span class="line"># 使用预处理语句创建表</span><br><span class="line">sql = <span class="string">""</span><span class="string">"CREATE TABLE EMPLOYEE (</span></span><br><span class="line"><span class="string">         FIRST_NAME  CHAR(20) NOT NULL,</span></span><br><span class="line"><span class="string">         LAST_NAME  CHAR(20),</span></span><br><span class="line"><span class="string">         AGE INT,  </span></span><br><span class="line"><span class="string">         SEX CHAR(1),</span></span><br><span class="line"><span class="string">         INCOME FLOAT )"</span><span class="string">""</span></span><br><span class="line"> </span><br><span class="line"><span class="built_in">cursor</span>.execute(sql)</span><br><span class="line"> </span><br><span class="line"># 关闭数据库连接</span><br><span class="line">db.<span class="built_in">close</span>()</span><br></pre></td></tr></table></figure>
+<h4 id="ORM介绍"><a href="#ORM介绍" class="headerlink" title="ORM介绍"></a>ORM介绍</h4><p>重点学习下flask ORM的原理和使用。ORM的全称是：Object Relationship Map(对象-关系映射)。主要的功能是实现模型对象到关系型数据库数据的映射。<br><img src="https://files.jb51.net/file_images/article/201807/2018713121936591.png?201861312209" alt=""></p>
+<h4 id="flask-sqlalchemy使用"><a href="#flask-sqlalchemy使用" class="headerlink" title="flask_sqlalchemy使用"></a>flask_sqlalchemy使用</h4><p><strong>安装相应库</strong><br><code>pip install flask_sqlalchemy</code><br><strong>初始化sqlalchemy</strong><br>flask_sqlalchemy在flask应用中初始化sqlalchemy有两种方式，一是把flask实例作为参数传给SQLAlchemy，二是不传flask实例给SQLAlchemy，在flask应用工厂中调用init_app方法进行初始化。方法二在实际应用中更实用，flask应用工厂会用的更普遍。<br><strong>方法一：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">app = Flask(__name__)</span><br><span class="line">db = SQLAlchemy(app)</span><br></pre></td></tr></table></figure>
+<p><strong>方法二：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># db.py</span></span><br><span class="line">from flask_sqlalchemy <span class="keyword">import</span> SQLAlchemy</span><br><span class="line">db = SQLAlchemy()</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># __init__.py </span><br><span class="line"><span class="function">def <span class="title">create_app</span><span class="params">()</span>:</span></span><br><span class="line"><span class="function">	app </span>= Flask(__name__)</span><br><span class="line"></span><br><span class="line">	# 从<span class="built_in">config</span>文件读取配置，包括数据库ip、账号、密码等信息</span><br><span class="line">	from .<span class="built_in">config</span> <span class="keyword">import</span> Config</span><br><span class="line">	app.<span class="built_in">config</span>.from_object(Config())</span><br><span class="line"></span><br><span class="line">	from .db <span class="keyword">import</span> db</span><br><span class="line">	db.init_app(app)</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> app</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># config.py </span></span><br><span class="line"># 附上sqlite数据库连接配置</span><br><span class="line"># mysql数据库的指定是使用URL的方式来指定的：'mysql://用户名:密码@服务器地址:端口号/数据库名'，</span><br><span class="line"># 连接SQLite是使用这用格式：sqlite:<span class="comment">////absolute/path/to/foo.db，使用////开头</span></span><br><span class="line">	</span><br><span class="line"><span class="function">class <span class="title">Config</span><span class="params">(object)</span>:</span></span><br><span class="line">	SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/test.db'</span><br><span class="line">	SQLALCHEMY_TRACK_MODIFICATIONS = True</span><br></pre></td></tr></table></figure>
+<p><strong>创建表</strong><br>通过定义类的方式创建表，类继承与db.Model模型，表的字段类型以db.String, db.Integer等的方式进行指定，另外常用的选项primary_key, unique, index, nullable, default在字段类型后进行赋值。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># db.py</span></span><br><span class="line">from flask_sqlalchemy <span class="keyword">import</span> SQLAlchemy</span><br><span class="line">db = SQLAlchemy()</span><br><span class="line"></span><br><span class="line">class User(db.Model):</span><br><span class="line">	__tablename__ = 'User'</span><br><span class="line">	id = db.Column(db.Integer, primary_key=True)</span><br><span class="line">	username = db.Column(db.<span class="keyword">String</span>(<span class="number">80</span>), unique=True)</span><br><span class="line">	password = db.Column(db.<span class="keyword">String</span>(<span class="number">120</span>))</span><br><span class="line">	email = db.Column(db.<span class="keyword">String</span>(<span class="number">80</span>), nullable=True)</span><br></pre></td></tr></table></figure>
+<p>以上定义了一个User的数据表，表名显示指定为’User’，字段包括id， username， password， email，其中id为主键，username唯一值，email可为空，即不传入。<br>在应用工厂中初始化数据库有一个不太方便的地方，就是执行创建数据库或删除数据库等操作必须在flask应用请求中调用，不能单独使用。下面是在flask蓝图中创建数据表，执行create_all()命令会根据db.py文件中已经定义好的所有数据表。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># test.py</span></span><br><span class="line">from flask <span class="keyword">import</span> request, Blueprint</span><br><span class="line">from .db <span class="keyword">import</span> db, User</span><br><span class="line"></span><br><span class="line">bp = Blueprint('test', __name__, url_prefix='/test')</span><br><span class="line"></span><br><span class="line">@bp.route('/db')</span><br><span class="line"><span class="function">def <span class="title">testdb</span><span class="params">()</span>:</span></span><br><span class="line">	# 数据库创建</span><br><span class="line">	db.create_all()</span><br><span class="line"></span><br><span class="line">	return '数据库创建'</span><br></pre></td></tr></table></figure>
+<p><strong>数据库增删查改</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">from .db <span class="keyword">import</span> db, User</span><br><span class="line">	</span><br><span class="line"># 插入单条数据</span><br><span class="line">usera = User(username='testa', password='111')</span><br><span class="line">db.session.add(usera)</span><br><span class="line">db.session.commit()</span><br><span class="line">	</span><br><span class="line"># 插入多条数据</span><br><span class="line">userb = User(username='testb', password='222')</span><br><span class="line">userc = User(username='testc', password='333')</span><br><span class="line">db.session.add([userb, userc])</span><br><span class="line">db.session.commit()</span><br><span class="line">	</span><br><span class="line"># 数据查询过滤</span><br><span class="line"># 查询过滤器包括filter, filter_by, limit, order_by等</span><br><span class="line"><span class="meta"># first()方法返回第一个结果，all()方法以列表形式返回所有结果</span></span><br><span class="line">theuser = User.query.filter_by(username='testa').first() </span><br><span class="line"><span class="built_in">print</span>(theuser.password)     # 输出<span class="number">111</span></span><br><span class="line"></span><br><span class="line"># 修改某条数据</span><br><span class="line">User.query.filter_by(username='testb').update(&#123;'password':'newdata'&#125;)</span><br><span class="line">	</span><br><span class="line"># 删除某条数据</span><br><span class="line">User.query.filter_by(User.username='testb').delete()</span><br></pre></td></tr></table></figure>
+
+<h4 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h4><p>flask_sqlalchemy是推荐使用的一种操作数据库方式，简单易用，又灵活强大。但是flask_sqlalchemy不能处理修改字段类型或增加字段等操作，数据库结构在create_all()方法运行之后就已经固定，如果更改结构，需要执行drop_all()，而这会删除已有数据库的全部信息。这就需要配合flask_migrate这个库进行数据库迁移操作来实现，后续可自行鼓捣一下。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/python%E5%BC%80%E5%8F%91/">python开发</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/数据库/">数据库</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2020/05/04/flask%E6%A1%86%E6%9E%B6%E4%B8%AD%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C%E7%9A%84%E6%96%B9%E5%BC%8F/" data-title="flask框架中数据库操作的方式.md | seizetheday博客" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2020/04/25/python日志模块logging/"  title="python日志模块logging">
+ <strong>下一篇：</strong><br/> 
+ <span>python日志模块logging
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#flask操作数据库的两种主要方式"><span class="toc-number">1.</span> <span class="toc-text">flask操作数据库的两种主要方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pymysql使用"><span class="toc-number">2.</span> <span class="toc-text">pymysql使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ORM介绍"><span class="toc-number">3.</span> <span class="toc-text">ORM介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#flask-sqlalchemy使用"><span class="toc-number">4.</span> <span class="toc-text">flask_sqlalchemy使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#最后"><span class="toc-number">5.</span> <span class="toc-text">最后</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/python/Web开发/" title="Web开发">Web开发<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/python/" title="python">python<sup>2</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/python开发/" title="python开发">python开发<sup>2</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/celery/" title="celery">celery<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/日志logging/" title="日志logging">日志logging<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://github.com" target="_blank" title="github">github</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://www.eflycloud.com" target="_blank" title="睿江云">睿江云</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 一起聊聊编程，聊聊人生 <br/>
+			    生活不只有眼前的苟且，还有未来的苟且</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:673152199@qq.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2020 
+		
+		<a href="/about" target="_blank" title="Liang Hui">Liang Hui</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>

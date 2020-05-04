@@ -1,10 +1,10 @@
 
- <!DOCTYPE HTML>
+  <!DOCTYPE HTML>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   
-    <title>categories | seizetheday博客</title>
+    <title>归档: 2020/5 | seizetheday博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Liang Hui">
@@ -13,13 +13,11 @@
     
     <meta name="description" content="既然花了钱搭建服务器，总不能太浪费吧">
 <meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://yoursite.com/categories/index.html">
+<meta property="og:title" content="seizetheday博客">
+<meta property="og:url" content="http://yoursite.com/archives/2020/05/index.html">
 <meta property="og:site_name" content="seizetheday博客">
 <meta property="og:description" content="既然花了钱搭建服务器，总不能太浪费吧">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-04-16T13:58:10.038Z">
-<meta property="article:modified_time" content="2020-04-16T13:58:10.038Z">
 <meta property="article:author" content="Liang Hui">
 <meta name="twitter:card" content="summary">
 
@@ -35,6 +33,8 @@
     
     
 <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
 
 <meta name="generator" content="Hexo 4.2.0"></head>
 
@@ -80,21 +80,35 @@
 </div>
       </header>
       <div id="container">
-          
+        
+
 <div class="archive-title" >
-<h2 class="category-icon">分类</h2>
-
-<a data-src="/categories/python/Web开发/" href="#Web开发" title="Web开发">Web开发<sup>1</sup></a>
-
-<a data-src="/categories/python/" href="#python" title="python">python<sup>2</sup></a>
-
-<a data-src="/categories/python开发/" href="#python开发" title="python开发">python开发<sup>2</sup></a>
-
+  <h2 class="archive-icon">2020/5</h2>
+  
+  <div class="archiveslist archive-float clearfix">
+   <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">2020 年 05 月</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">2020 年 04 月</a><span class="archive-list-count">2</span></li></ul>
+ </div>
+  
 </div>
-<div id="main" class="archive-part">
-<div class="all-list-box"></div>
-</div>
+<div id="main" class="archive-part clearfix">
+  <div id="archive-page">
 
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/2020/05/04/flask框架中数据库操作的方式/" title="flask框架中数据库操作的方式.md" itemprop="url">
+  
+
+    <time datetime="2020-05-04T08:50:53.000Z" itemprop="datePublished">2020-05-04</time>
+
+
+    <h1 itemprop="name">flask框架中数据库操作的方式.md</h1>
+
+  </a>
+</section>
+
+
+  </div>
+</div>
 
       </div>
       <footer><div id="footer" >
@@ -195,24 +209,6 @@ $(document).ready(function(){
 
 
 
-
-<script type="text/javascript">
-$(document).ready(function(){ 
-  var list    = $('.archive-title a'),
-      box     = $('.all-list-box'),
-      first   = $('.archive-title a:first-of-type');
-      box.load(first.attr('data-src').toString()+' #archive-page');
-      first.addClass('current');
-  list.each(function(){
-    $(this).click(function(){
-      var listSrc=$(this).attr('data-src').toString()+' #archive-page';
-      box.load(listSrc);
-      list.removeClass('current');
-      $(this).addClass('current');
-     });  
-    });
-  }); 
-</script>
 
 
 <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
