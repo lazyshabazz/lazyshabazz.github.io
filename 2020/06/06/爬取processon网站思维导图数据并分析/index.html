@@ -1,0 +1,502 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>爬取processon网站思维导图数据并分析 | seizetheday博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Liang Hui">
+    
+
+    
+    <meta name="description" content="最近我们测试团队把测试用例的编写从testlink迁移到思维导图xmind中，其中一个重要原因就是编写更方便快捷，且可读性强，但在团队协作上不方便，只能在本地操作，最后上传到testlink进行分享，不能多人同时编辑。所以搜集了一番在线编辑思维导图的工具后，选定了processon，免费、可自定义添加标签、支持多人协作。几乎完美，但不能按功能需求统计测试用例的数量，而本文就是要解决这样一个问题的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="爬取processon网站思维导图数据并分析">
+<meta property="og:url" content="http://yoursite.com/2020/06/06/%E7%88%AC%E5%8F%96processon%E7%BD%91%E7%AB%99%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE%E6%95%B0%E6%8D%AE%E5%B9%B6%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="seizetheday博客">
+<meta property="og:description" content="最近我们测试团队把测试用例的编写从testlink迁移到思维导图xmind中，其中一个重要原因就是编写更方便快捷，且可读性强，但在团队协作上不方便，只能在本地操作，最后上传到testlink进行分享，不能多人同时编辑。所以搜集了一番在线编辑思维导图的工具后，选定了processon，免费、可自定义添加标签、支持多人协作。几乎完美，但不能按功能需求统计测试用例的数量，而本文就是要解决这样一个问题的。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/img/articleimg/logincookie.jpg">
+<meta property="og:image" content="http://yoursite.com/img/articleimg/jsessionid.jpg">
+<meta property="og:image" content="http://yoursite.com/img/articleimg/loadfiles.jpg">
+<meta property="article:published_time" content="2020-06-06T14:31:20.000Z">
+<meta property="article:modified_time" content="2020-06-06T14:35:47.414Z">
+<meta property="article:author" content="Liang Hui">
+<meta property="article:tag" content="python">
+<meta property="article:tag" content="爬虫">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/img/articleimg/logincookie.jpg">
+
+    
+    <link rel="alternative" href="/atom.xml" title="seizetheday博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/%02.css">
+<link rel="stylesheet" href="/.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="seizetheday博客" title="seizetheday博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="seizetheday博客">seizetheday博客</a></h1>
+				<h2 class="blog-motto">学习，工作，生活</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+						<li><a href="/tags">标签</a></li>
+					
+						<li><a href="/categories">目录</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value=  ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2020/06/06/爬取processon网站思维导图数据并分析/" title="爬取processon网站思维导图数据并分析" itemprop="url">爬取processon网站思维导图数据并分析</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Liang Hui" target="_blank" itemprop="author">Liang Hui</a>
+		
+  <p class="article-time">
+    <time datetime="2020-06-06T14:31:20.000Z" itemprop="datePublished"> 发表于 2020-06-06</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#登录processon"><span class="toc-number">1.</span> <span class="toc-text">登录processon</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取指定思维导图数据"><span class="toc-number">2.</span> <span class="toc-text">获取指定思维导图数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#统计数据"><span class="toc-number">3.</span> <span class="toc-text">统计数据</span></a></li></ol>
+		
+		</div>
+		
+		<p>最近我们测试团队把测试用例的编写从testlink迁移到思维导图xmind中，其中一个重要原因就是编写更方便快捷，且可读性强，但在团队协作上不方便，只能在本地操作，最后上传到testlink进行分享，不能多人同时编辑。所以搜集了一番在线编辑思维导图的工具后，选定了processon，免费、可自定义添加标签、支持多人协作。几乎完美，但不能按功能需求统计测试用例的数量，而本文就是要解决这样一个问题的。<br><br>在使用processon的过程中，通过F12控制台，简单了解主要的请求和响应后，确定了一个爬虫获取processon思维导图数据并分析的方法，先通过账号密码登录processon网站，再获取指定思维导图的响应信息（类似json格式），最后解析json，按一定规则统计用例的数量。</p>
+<h4 id="登录processon"><a href="#登录processon" class="headerlink" title="登录processon"></a>登录processon</h4><p>首先进入登录页面，输入账号密码登录，登录成功后，在控制台找到login的请求，在request headers中看到的基本都是一些常规的信息，除了cookies，但cookies有很多个，查看了其他的一些请求，也没找到这些cookies是如何生成的。<br><img src="/img/articleimg/logincookie.jpg" alt=""><br>没办法，只能清掉缓存，重新打开processon的网址，这倒有了新的发现，在第一次请求<a href="http://www.processon.com" target="_blank" rel="noopener">www.processon.com</a> 的url时，发现它返回了一个response cookie，即下图的JSESSIONID，这个cookie就存在登录成功的请求cookie中。<br><img src="/img/articleimg/jsessionid.jpg" alt=""><br>所以判定是processon在首次访问网站先返回一个唯一的JSESSIONID给用户，用户提交登录请求时需要携带这个cookie作为认证。接下来编写代码验证，确实如此。<br>在登录的post请求中，传入的两个参数login_email和login_password分别是用户邮箱和密码，响应中会返回processon_userKey和_sid，但这个不需要我们特地关注，因为使用了python的session方式进行请求，它会自动保存和更新返回的cookie。至此，就实现了登录的需求。<br></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">class <span class="title">Processon</span><span class="params">()</span>:</span></span><br><span class="line"><span class="function">  </span></span><br><span class="line"><span class="function">	def __<span class="title">init__</span><span class="params">(self, username, passwd, filename=None)</span>:</span></span><br><span class="line">        self.username = username</span><br><span class="line">        self.passwd = passwd</span><br><span class="line">        self.baseurl = 'https://www.processon.com'</span><br><span class="line">        self.session = requests.Session()</span><br><span class="line">        self.headers = &#123;</span><br><span class="line">            'user-agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36',</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">def <span class="title">get_cookie</span><span class="params">(self)</span>:</span></span><br><span class="line"><span class="function">        login_url </span>= self.baseurl</span><br><span class="line"></span><br><span class="line">        res = self.session.<span class="built_in">get</span>(login_url, headers=self.headers)</span><br><span class="line">        cookies = res.headers['Set-Cookie']</span><br><span class="line">        findall = re.findall(r'JSESSIONID=(.*?);(.*)', cookies)</span><br><span class="line">        jessionid = findall[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">return</span> jessionid</span><br><span class="line"></span><br><span class="line">    def login(self):</span><br><span class="line">        data = &#123;</span><br><span class="line">            'login_email': self.username,</span><br><span class="line">            'login_password': self.passwd</span><br><span class="line">        &#125;</span><br><span class="line">        self.session.cookies.set('JSESSIONID', self.get_cookie())</span><br><span class="line">        url = self.baseurl + '/login'</span><br><span class="line"></span><br><span class="line">        self.session.post(url, data=data, headers=self.headers)</span><br></pre></td></tr></table></figure>
+
+<h4 id="获取指定思维导图数据"><a href="#获取指定思维导图数据" class="headerlink" title="获取指定思维导图数据"></a>获取指定思维导图数据</h4><p>接下来就是获取到协作项目的标题信息等，然后进入到思维导图的文件中，获取json格式的文件信息。点击‘与我协作’查看协作的项目，然后在一堆请求中找到带有所需项目的信息，如我创建了一个云桌面V1.1的协作项目，最终在loadfiles这个请求中，成功找到关于这个项目的关键信息。<br><img src="/img/articleimg/loadfiles.jpg" alt=""><br>再点击进入云桌面V1.1的项目，在getdef的请求中看到了思维导图的所有信息，分析这个请求，需要传入的参数有两个，一个是id，一个是_。对比id的值和前面loadfiles请求中获取的信息，发现与其中的chartId一致，所以从loadfiles的请求中只获取chartId传入getdef的请求中即可。而另一个参数_虽然名字莫名其妙，但很容易发现这就是一个时间戳，并且是毫秒级别的时间戳，表示的是请求发送的时间，所以只需要在请求时生成一个毫秒级的时间戳传进去即可。<br><br>根据上面的思路，编写一个函数去请求和获取思维导图的信息，但奇怪的是，返回的是一个空的字典！这不合逻辑吧，检查了一遍请求头和之前的请求没什么区别，再在请求头中增加了referer的值仍然不行，应该不是请求头的问题。确认登录的账号是有权限查看和编辑的。百思不得其解，又检查了几遍同时发送的其他请求，并没有找到关联度很高的请求，最后猜想可能是这个请求不能单独发起，需要从其他请求通过某种方式调动这个请求，所以在请求getdef前，先请求了一次referer的请求，结果还真的成功返回了完整的思维导图信息！<br></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">def <span class="title">get_info</span><span class="params">(self)</span>:</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">    chartid </span>= self.loadfiles()</span><br><span class="line">    referer = 'https://www.processon.com/mindmap/' + chartid</span><br><span class="line">    self.session.<span class="built_in">get</span>(referer, headers=self.headers)</span><br><span class="line">    data = &#123;</span><br><span class="line">        'id': chartid,</span><br><span class="line">        <span class="string">'_'</span>: str(<span class="keyword">int</span>(round(time.time() * <span class="number">1000</span>)))</span><br><span class="line">    &#125;</span><br><span class="line">    header = self.headers.copy()</span><br><span class="line">    header.update(&#123;'referer': referer&#125;)</span><br><span class="line">    rs = <span class="string">''</span></span><br><span class="line">    for key, value in data.items():</span><br><span class="line">        thestr = key + <span class="string">'='</span> + value + <span class="string">'&amp;'</span></span><br><span class="line">        rs += thestr</span><br><span class="line">    rs = rs[:<span class="number">-1</span>]</span><br><span class="line">    url = self.baseurl + '/diagraming/getdef?' + rs</span><br><span class="line">    res = self.session.<span class="built_in">get</span>(url, headers=header, stream=True)</span><br><span class="line">    resjson = json.loads(res.<span class="built_in">text</span>)</span><br><span class="line">    #with open('res.json', 'w') as f:</span><br><span class="line">    <span class="meta">#    f.write(res.text)</span></span><br><span class="line">    <span class="keyword">return</span> resjson</span><br></pre></td></tr></table></figure>
+<h4 id="统计数据"><a href="#统计数据" class="headerlink" title="统计数据"></a>统计数据</h4><p>把思维导图的数据通过一些在线json格式转换的工具，可以得到类似以下的结果，发现它是通过层层嵌套children的方式去展示结构和信息的。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="string">"children"</span>: [&#123;</span><br><span class="line">	<span class="string">"tags"</span>: [&#123;</span><br><span class="line">		<span class="string">"text"</span>: <span class="string">"测试环境"</span>,</span><br><span class="line">		<span class="string">"color"</span>: <span class="string">"rgb(255, 255, 255)"</span>,</span><br><span class="line">		<span class="string">"background"</span>: <span class="string">"rgb(255, 159, 26)"</span></span><br><span class="line">	&#125;],</span><br><span class="line">		<span class="string">"id"</span>: <span class="string">"9f04892242c34f45da56"</span>,</span><br><span class="line">	<span class="string">"title"</span>: <span class="string">"自定义linux桌面程序"</span>,</span><br><span class="line">	<span class="string">"children"</span>: [&#123;</span><br><span class="line">		<span class="string">"id"</span>: <span class="string">"5300dedb403c6c69da4a"</span>,</span><br><span class="line">		<span class="string">"title"</span>: <span class="string">"桌面应用组页面"</span>,</span><br><span class="line">		<span class="string">"children"</span>: [&#123;</span><br><span class="line">			<span class="string">"id"</span>: <span class="string">"bd52301de0cc2993d8f2"</span>,</span><br><span class="line">			<span class="string">"title"</span>: <span class="string">"新建桌面应用组"</span>,</span><br><span class="line">			<span class="string">"children"</span>: [&#123;</span><br><span class="line">				<span class="string">"id"</span>: <span class="string">"c2bd891a9b8e6ac6a408"</span>,</span><br><span class="line">				<span class="string">"title"</span>: <span class="string">"选择全部桌面应用"</span>,</span><br><span class="line">				<span class="string">"children"</span>: [&#123;</span><br><span class="line">					<span class="string">"id"</span>: <span class="string">"28419acf957251777d3e"</span>,</span><br><span class="line">					<span class="string">"title"</span>: <span class="string">"输入应用组名称（特别长）&amp;amp;amp;检查兼容性"</span>,</span><br><span class="line">					<span class="string">"children"</span>: [],</span><br><span class="line">						<span class="string">"parent"</span>: <span class="string">"c2bd891a9b8e6ac6a408"</span></span><br><span class="line">				&#125;, &#123;</span><br><span class="line">					<span class="string">"id"</span>: <span class="string">"dee886b26d54d0f906b4"</span>,</span><br><span class="line">					<span class="string">"title"</span>: <span class="string">"选择全部应用&amp;amp;amp;检查页面图标&amp;amp;lt;br&amp;amp;gt;检查勾选图标"</span>,</span><br><span class="line">					<span class="string">"children"</span>: [],</span><br><span class="line">						<span class="string">"parent"</span>: <span class="string">"c2bd891a9b8e6ac6a408"</span></span><br><span class="line">				&#125;,</span><br></pre></td></tr></table></figure>
+<p>对于这样的方式，因为嵌套的层数是不确定，通过一般的for循环是不可能遍历所有结果的，这里就要提到一个概念，递归生成器。把思维导图信息转换的json格式和迭代的键‘children’传入以下定义的函数，最后通过计算获得所有用例的数量；也可通过定义好的标签名，搜索具有特定标签的用例数量。<br>以下函数用到了yield的生成器，每次函数执行到yield都会生成一个值，就停止运行，再次调用函数会从停止的地方继续运行。由于yield生成的是一个迭代对象，要获取所有的值，需要把函数传进list()函数中求值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">catch_all</span><span class="params">(self, dic, key, tagsearch)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    dic：传入的字典</span></span><br><span class="line"><span class="string">    key：迭代的键</span></span><br><span class="line"><span class="string">    tagsearch： 为空，计算所有用例；指定标签名，获取特定标签用例数量</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="keyword">if</span> dic[key]:</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> dic[key]:</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> i[key] <span class="keyword">and</span> <span class="keyword">not</span> tagsearch:</span><br><span class="line">                self.count += <span class="number">1</span></span><br><span class="line">            <span class="keyword">elif</span> <span class="keyword">not</span> i[key] <span class="keyword">and</span> tagsearch:</span><br><span class="line">                <span class="keyword">if</span> <span class="string">'tags'</span> <span class="keyword">in</span> i:</span><br><span class="line">                    <span class="keyword">for</span> tag <span class="keyword">in</span> i[<span class="string">'tags'</span>]:</span><br><span class="line">                        <span class="comment"># 当前根据text统计数量，也可换成color和background</span></span><br><span class="line">                        <span class="keyword">if</span> tag[<span class="string">'text'</span>] == tagsearch:</span><br><span class="line">                            self.count += <span class="number">1</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                <span class="keyword">for</span> j <span class="keyword">in</span> self.catch_all(i, key, tagsearch):</span><br><span class="line">                    <span class="keyword">yield</span> j</span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+<p>以上</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/python/">python</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/爬虫/">爬虫</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2020/06/06/%E7%88%AC%E5%8F%96processon%E7%BD%91%E7%AB%99%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE%E6%95%B0%E6%8D%AE%E5%B9%B6%E5%88%86%E6%9E%90/" data-title="爬取processon网站思维导图数据并分析 | seizetheday博客" data-tsina="" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2020/05/12/flask上下文管理/"  title="flask上下文管理">
+ <strong>下一篇：</strong><br/> 
+ <span>flask上下文管理
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#登录processon"><span class="toc-number">1.</span> <span class="toc-text">登录processon</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#获取指定思维导图数据"><span class="toc-number">2.</span> <span class="toc-text">获取指定思维导图数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#统计数据"><span class="toc-number">3.</span> <span class="toc-text">统计数据</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/python/Web开发/" title="Web开发">Web开发<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/python/" title="python">python<sup>3</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/python开发/" title="python开发">python开发<sup>3</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/flask/" title="flask">flask<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/celery/" title="celery">celery<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/日志logging/" title="日志logging">日志logging<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/数据库/" title="数据库">数据库<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/爬虫/" title="爬虫">爬虫<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://github.com" target="_blank" title="github">github</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="https://www.eflycloud.com" target="_blank" title="睿江云">睿江云</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 一起聊聊编程，聊聊人生 <br/>
+			    生活不只有眼前的苟且，还有未来的苟且</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:673152199@qq.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2020 
+		
+		<a href="/about" target="_blank" title="Liang Hui">Liang Hui</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
